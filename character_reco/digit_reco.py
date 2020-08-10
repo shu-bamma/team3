@@ -18,7 +18,7 @@ def assert_color(img):
     else:
         return 0
 # Load the classifier
-clf = joblib.load("digits_cls (1).pkl" )
+clf = joblib.load("digits_cls (2).pkl" )
 capture = cv2.VideoCapture("./autonomous_tilted_camera.avi")
 
 
@@ -43,7 +43,7 @@ while(True):
     # Threshold the image
     ret, im_th = cv2.threshold(im_gray, 100, 255, cv2.THRESH_BINARY_INV)
     th3 = cv2.adaptiveThreshold(im_gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-            cv2.THRESH_BINARY_INV,31,2)
+            cv2.THRESH_BINARY_INV,11,2)
     # Find contours in the image
     _,ctrs,_ = cv2.findContours(th3.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -87,19 +87,20 @@ while(True):
         roi = im_th[pt1:pt1+leng, pt2:pt2+leng]
         # Resize the image
         try:
+            ite=roi
             roi = cv2.resize(roi, (28, 28), interpolation=cv2.INTER_AREA)
-            roi = cv2.dilate(roi, (3, 3))
+            #oi = cv2.dilate(roi, (3, 3))
         except:
             continue
         # Calculate the HOG features
 
 
-
-        roi_hog_fd = hog(roi, orientations=9, pixels_per_cell=(14, 14), cells_per_block=(1, 1), visualize=False)
-        nbr = clf.predict(np.array([roi_hog_fd], 'float64'))
+        ary=np.array([roi], 'int32')
+        art=np.reshape(ary,(1,-1))
+        nbr = clf.predict(art)
         cv2.putText(im, str(int(nbr[0]))+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 1, (0, 255, 255), 2)
     cv2.imshow('img',im)
-    if cv2.waitKey(100) == 27:
+    if cv2.waitKey(1) == 27:
             break
  
 capture.release()
