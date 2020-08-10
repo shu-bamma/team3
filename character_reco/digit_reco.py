@@ -10,9 +10,10 @@ def assert_color(img):
     for i in range(ar.shape[0]):
         for j in range(ar.shape[1]):
             if ar[i,j]==255:
-                cnt=cnt+1
+                cnt=1
+                break
 
-    if cnt>(ar.shape[0]*ar.shape[1]/100):
+    if cnt>0:
         return 1
     else:
         return 0
@@ -24,7 +25,7 @@ capture = cv2.VideoCapture("./autonomous_tilted_camera.avi")
 boundaries={'blue':([110,50,50], [130,255,255]),
             'red':([0,50,50], [10,255,255]),
             'yellow':([25,50,50], [35,255,255]),
-            'orange':([10,50,50], [25,255,255]),
+            'orange':([11,50,50], [24,255,255]),
             'green':([35,50,50], [75,255,255])   
            }
 
@@ -42,7 +43,7 @@ while(True):
     # Threshold the image
     ret, im_th = cv2.threshold(im_gray, 100, 255, cv2.THRESH_BINARY_INV)
     th3 = cv2.adaptiveThreshold(im_gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-            cv2.THRESH_BINARY_INV,11,2)
+            cv2.THRESH_BINARY_INV,31,2)
     # Find contours in the image
     _,ctrs,_ = cv2.findContours(th3.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -52,10 +53,11 @@ while(True):
     rects=list()
     for ctr in ctrs:
         area = cv2.contourArea(ctr)
-        if area>500 and area<40000:
+        if area>500 and area<10000:
             rect=cv2.boundingRect(ctr)
             if rect[2]/rect[3]<4 and rect[3]/rect[2]<4:
-                rects.append(rect)
+                if rect[2]<400:
+                    rects.append(rect)
         approx = cv2.approxPolyDP(ctr, 0.01*cv2.arcLength(ctr, True), True)
         
       
@@ -75,9 +77,7 @@ while(True):
                 # the mask
             mask = cv2.inRange(hsv, lower, upper)
 
-
-
-            if assert_color(mask)==1:
+            if cv2.countNonZero(mask) != 0:
                 color=key
                 break
         # Make the rectangular region around the digit
@@ -99,7 +99,7 @@ while(True):
         nbr = clf.predict(np.array([roi_hog_fd], 'float64'))
         cv2.putText(im, str(int(nbr[0]))+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 1, (0, 255, 255), 2)
     cv2.imshow('img',im)
-    if cv2.waitKey(1) == 27:
+    if cv2.waitKey(100) == 27:
             break
  
 capture.release()
