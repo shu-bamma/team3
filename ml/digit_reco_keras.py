@@ -45,7 +45,7 @@ def image_callback(img_msg):
 	# Threshold the image
 	_,im_th = cv2.threshold(im_gray, 100, 255, cv2.THRESH_BINARY_INV)
 	th3 = cv2.adaptiveThreshold(im_gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-		cv2.THRESH_BINARY_INV,31,2)
+		cv2.THRESH_BINARY_INV,11,2)
 		# Find contours in the image
 	_,ctrs,_ = cv2.findContours(th3.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	rects=list()
