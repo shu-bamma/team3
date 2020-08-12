@@ -22,18 +22,9 @@ def assert_color(img):
         return 1
     else:
         return 0
-# Load the classifier
-clf = joblib.load("cls.pkl" )
-# Initialize the CvBridge class
-bridge=CvBridge()
-#initialise the ros node
-rospy.init_node('realtime_test', anonymous=True)
-
-
 
 def image_callback(img_msg):
-	rospy.loginfo(img_msg.header)
-	#log some info ABOUT THE image topic
+
 	boundaries={'blue':([110,50,50], [130,255,255]),
     	        'red':([0,50,50], [10,255,255]),
         	    'yellow':([25,50,50], [35,255,255]),
@@ -103,9 +94,17 @@ def image_callback(img_msg):
 	cv2.imshow('img',im)
     #show  the frame with detection
 	cv2.waitKey(3)		
+if __name__ == '__main__':
+	try:
+		# Load the classifier
+		clf=joblib.load("cls.pkl")
+		#initialise the ros node
+		rospy.init_node('realtime_test', anonymous=True)
+		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
+		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
+		# Initialize the CvBridge class
+		ridge=CvBridge()
+		rospy.spin()
 
-# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
-#capture.release()
-while not rospy.is_shutdown():
-	rospy.spin()
+	except rospy.ROSInterruptException:
+		rospy.loginfo("node terminated")
