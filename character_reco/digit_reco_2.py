@@ -18,7 +18,7 @@ def assert_color(img):
     else:
         return 0
 # Load the classifier
-clf = joblib.load("digits_cls.pkl" )
+clf = joblib.load("cls.pkl" )
 capture = cv2.VideoCapture("./autonomous_tilted_camera.avi")
 
 
