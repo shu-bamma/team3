@@ -3,6 +3,7 @@ import cv2
 from skimage.feature import hog
 import numpy as np
 from sklearn.externals import joblib
+from keras.models import load_model
 #function for asserting color configuratoin
 from sensor_msgs.msg import Image
 import rospy
