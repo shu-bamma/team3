@@ -2,7 +2,8 @@
 import cv2
 from skimage.feature import hog
 import numpy as np
-from sklearn.externals import joblib
+# from sklearn.externals import joblib
+import joblib
 #function for asserting color configuratoin
 def assert_color(img):
     ar=np.array(img,dtype='int')

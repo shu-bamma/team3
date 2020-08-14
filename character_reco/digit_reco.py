@@ -2,7 +2,8 @@
 import cv2
 from skimage.feature import hog
 import numpy as np
-from sklearn.externals import joblib
+# from sklearn.externals import joblib
+import joblib
 #function for asserting color configuratoin
 def assert_color(img):
     ar=np.array(img,dtype='int')
@@ -18,8 +19,8 @@ def assert_color(img):
     else:
         return 0
 # Load the classifier
-clf = joblib.load("digits_cls (2).pkl" )
-capture = cv2.VideoCapture("./autonomous_tilted_camera.avi")
+clf = joblib.load("digits_cls_2.pkl" )
+capture = cv2.VideoCapture("autonomous_tilted_camera.avi")
 
 
 boundaries={'blue':([110,50,50], [130,255,255]),
