@@ -2,16 +2,50 @@
 import cv2
 from skimage.feature import hog
 import numpy as np
-from sklearn.externals import joblib
-from keras.models import load_model
+# from sklearn.externals import joblib
+import joblib
+# import tensorflow.keras as keras
+from tensorflow.keras.models import load_model
 #function for asserting color configuratoin
 from sensor_msgs.msg import Image
 import rospy
 from cv_bridge import CvBridge, CvBridgeError
+import tensorflow as tf
+from tensorflow.keras.datasets import cifar100
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+# model = tf.keras.models.load_model("test12.h5")
+image_height = 28
+image_width = 28
+num_channels = 1
+num_classes = 10
 
+def build_model():
+    model = Sequential()
+    # add Convolutional layers
+    model.add(Conv2D(filters=32, kernel_size=(3,3), activation='relu', padding='same',
+                     input_shape=(image_height, image_width, num_channels)))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Conv2D(filters=64, kernel_size=(3,3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Conv2D(filters=64, kernel_size=(3,3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2,2)))    
+    model.add(Flatten())
+    # Densely connected layers
+    model.add(Dense(128, activation='relu'))
+    # output layer
+    model.add(Dense(num_classes, activation='softmax'))
+    # compile with adam optimizer & categorical_crossentropy loss function
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+model = build_model()
+model.load_weights('/home/vishwajeet/catkin_ws/src/ethan_control/test.h5')
 
 def predictor(model_name,img):
-  model = load_model(model_name)
+  global model
   nl=np.array(img,dtype='float')
   nk=np.zeros((1,28,28,1),dtype='float')
   nk[0,:,:,0]=nl
@@ -20,6 +54,7 @@ def predictor(model_name,img):
   for i in range(res.shape[1]):
     if res[0,i]==1:
 
+      print(i)
       return i
 
 def image_callback(img_msg):
@@ -34,7 +69,7 @@ def image_callback(img_msg):
 	
 	#read the converted input image
 	try:
-		im=bridge.imgmsg_to_cv2(img_msg,"passthrough")
+		im=bridge.imgmsg_to_cv2(img_msg,"bgr8")
 	except CvBridgeError,e:
 		rospy.logerr("CvBridgeError: {0}".format(e))
 
@@ -94,13 +129,13 @@ def image_callback(img_msg):
 if __name__ == '__main__':
 	try:
 		# Load the classifier
-		clf=joblib.load("cls.pkl")
+		# clf=joblib.load("cls.pkl")
 		#initialise the ros node
 		rospy.init_node('realtime_test', anonymous=True)
 		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
+		sub_image = rospy.Subscriber("/camera1/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
-		ridge=CvBridge()
+		bridge=CvBridge()
 		rospy.spin()
 
 	except rospy.ROSInterruptException:
