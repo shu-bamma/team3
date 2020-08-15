@@ -1,0 +1,16 @@
+material safe/Diffuse
+{
+  receive_shadows off
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture he.png
+	scale 1.0 1.0
+      }
+      
+    }
+  }
+}
