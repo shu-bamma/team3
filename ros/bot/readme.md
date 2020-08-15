@@ -19,6 +19,8 @@ And lauch the navigation by command :
 
  **For controlling the arm**
 
+end arm length : 90mm, middle arm length : 100m
+
  you can refer rest.py in ethan_control package
 
  mat.data = [a,b,c,d,e]
