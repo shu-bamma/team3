@@ -27,7 +27,7 @@ end arm length : 90mm, middle arm length : 100m
 
  a = platform position
 
- a = camera holder angle
+ b = camera holder angle
 
  c = middle arm angle
 
