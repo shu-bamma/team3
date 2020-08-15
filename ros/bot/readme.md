@@ -1,3 +1,5 @@
+ Copy this three folders to your ros workspace
+
  **For launching the bot**
 
 `roslaunch ethan_gazebo ethan.launch`
