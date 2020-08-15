@@ -4,6 +4,7 @@
 
 `roslaunch ethan_gazebo ethan.launch`
 
+`rosrun ethan_control rest.py`
 
 **For navigation of the bot**
 
