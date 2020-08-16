@@ -56,14 +56,26 @@ def predictor(model_name,img):
 
       print(i)
       return i
+def assert_color(img):
+    ar=np.array(img,dtype='int')
+    cnt=0
+    for i in range(ar.shape[0]):
+        for j in range(ar.shape[1]):
+            if ar[i,j]==255:
+                cnt=cnt+1
+                break
 
+    if cnt>(ar.shape[0]*ar.shape[1]/100):
+        return 1
+    else:
+        return 0
 def image_callback(img_msg):
 
 	boundaries={'blue':([110,50,50], [130,255,255]),
     	        'red':([0,50,50], [10,255,255]),
         	    'yellow':([25,50,50], [35,255,255]),
             	'orange':([11,50,50], [24,255,255]),
-    	        'green':([35,50,50], [75,255,255])   
+    	        'green':([36,50,50], [75,255,255])   
     	        }
 
 	
@@ -107,7 +119,7 @@ def image_callback(img_msg):
 			mask = cv2.inRange(hsv, lower, upper)
 			# find the colors within the specified boundaries and apply
             # the mask
-			if cv2.countNonZero(mask)!= 0:
+			if assert_color(mask)== 1:
 				color=key
 				break
 		# Make the rectangular region around the digit
