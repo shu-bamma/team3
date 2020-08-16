@@ -2,7 +2,9 @@
 
  **For launching the bot**
 
-`roslaunch ethan_gazebo ethan.launch`
+`roslaunch gazebo_ros empty_world.launch`
+
+`roslaunch ethan_control controller.launch`
 
 `rosrun ethan_control rest.py`
  (this command is neccessary for to make gripper in rest position)
