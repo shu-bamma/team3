@@ -120,7 +120,7 @@ def image_callback(img_msg):
 			mask = cv2.inRange(hsv, lower, upper)
 			# find the colors within the specified boundaries and apply
             # the mask
-			if assert_color(mask)== 1:     #alternative: cv2.countNonZero(mask) != 0:
+			if assert_color(mask)== 1:     #alternative: if cv2.countNonZero(mask) != 0:
 				color=key
 				break
 		# Make the rectangular region around the digit
