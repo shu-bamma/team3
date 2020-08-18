@@ -8,7 +8,7 @@ from math import *
 from geometry_msgs.msg import Twist
 from gazebo_msgs.msg import ModelStates
 p=pi
-#from ethan_control.msg import Angles
+
 
 angle=[]
 with open('Angles.txt',"r") as f:
