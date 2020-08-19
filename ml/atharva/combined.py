@@ -5,6 +5,7 @@ import numpy as np
 import time
 import cv2
 import os
+import darknet
 # from sklearn.externals import joblib
 import joblib
 # import tensorflow.keras as keras
@@ -71,6 +72,7 @@ def assert_color(img):
                 else:
                     continue
     return 0
+"""
 labelsPath = os.path.join("obj.names")
 LABELS = open(labelsPath).read().strip().split("\n")
 
@@ -151,6 +153,7 @@ def predict(image):
             cv2.putText(image, text, (x +15, y - 10), cv2.FONT_HERSHEY_SIMPLEX,
                 1, color, 2)
     return image
+    """
 def image_callback(img_msg):
 
 	boundaries={{'blue':([110,50,50], [130,255,255]),
@@ -218,7 +221,7 @@ def image_callback(img_msg):
 			continue
         # Calculate the HOG features
 		cv2.putText(im, str(predictor('my_model.h5',roi))+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
-        im=predict(im)
+        im=detect(net,meta,im)
 	cv2.imshow('img',im)
     #show  the frame with detection
 	cv2.waitKey(3)		
