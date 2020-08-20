@@ -56,28 +56,15 @@ def predictor(model_name,img):
 
       print(i)
       return i
-def assert_color(img):
-    ar=np.array(img,dtype='int')
-    cnt=0
-    for i in range(ar.shape[0]):
-        for j in range(ar.shape[1]):
-            if ar[i,j]==255:
-                cnt=cnt+1
-                if cnt>(ar.shape[0]*ar.shape[1]/100):
-                    return 1
-                else:
-                    continue
-    return 0
-      
+
 def image_callback(img_msg):
 
 	boundaries={'blue':([110,50,50], [130,255,255]),
-            'orange':([15,50,50], [20,255,255]),
-            'red':([0,150,50], [10,255,255]),
-            'yellow':([25,150,50], [35,255,255]),
-            'green':([45,150,50], [65,255,255])   
-           		}   
-    	       
+    	        'red':([0,50,50], [10,255,255]),
+        	    'yellow':([25,50,50], [35,255,255]),
+            	'orange':([11,50,50], [24,255,255]),
+    	        'green':([35,50,50], [75,255,255])   
+    	        }
 
 	
 	#read the converted input image
@@ -120,7 +107,7 @@ def image_callback(img_msg):
 			mask = cv2.inRange(hsv, lower, upper)
 			# find the colors within the specified boundaries and apply
             # the mask
-			if assert_color(mask)== 1:     #alternative: if cv2.countNonZero(mask) != 0:
+			if cv2.countNonZero(mask)!= 0:
 				color=key
 				break
 		# Make the rectangular region around the digit
@@ -146,7 +133,7 @@ if __name__ == '__main__':
 		#initialise the ros node
 		rospy.init_node('realtime_test', anonymous=True)
 		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
+		sub_image = rospy.Subscriber("/camera1/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
 		rospy.spin()

@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <launch>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+  
   <arg name="model" default="$(find ethan_description)/urdf/ethan.xacro"/>
   <!-- <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" /> -->
 
@@ -22,10 +26,12 @@
             ns="diff_drive_controller" />
 
   <node name="controller_spawner" pkg="controller_manager" type="spawner"
-    args="joint_state_controller
-          diff_drive_controller
+    args="
+    	   diff_drive_controller
         platform_state_controller
           --shutdown-timeout 3"/>
+  <node pkg="ethan_control" type="rest.py" name="rest_node"  output="screen" />
+
 <!-- 
   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
     <param name="default_topic" value="/r2d2_diff_drive_controller/cmd_vel"/> -->

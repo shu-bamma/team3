@@ -3,12 +3,12 @@ import rospy
 from std_msgs.msg import Float64MultiArray
 from std_msgs.msg import MultiArrayDimension
 import random
-from tf.msg import tfMessage
 import numpy as np
+from math import *
 from geometry_msgs.msg import Twist
 from gazebo_msgs.msg import ModelStates
-import tf
-from tf.transformations import euler_from_quaternion
+
+
 def callback(msg):
     # if len(msg.transforms)<2:
     #     print(msg.transforms[0].transform.translation)
@@ -24,7 +24,7 @@ if __name__ =="__main__":
     mat = Float64MultiArray()
     mat.layout.dim.append(MultiArrayDimension())
     mat.layout.dim.append(MultiArrayDimension())
-    mat.data = [0,1.5,-1.5,3.13,0]
+    mat.data = [0,-1.5,1.5,1,1]
     i = 0
     while not rospy.is_shutdown():
         i +=1
@@ -35,5 +35,3 @@ if __name__ =="__main__":
 print("Now you can work!")
 
 
-    # rospy.spin()
-    
