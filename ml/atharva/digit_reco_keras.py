@@ -71,13 +71,13 @@ def assert_color(img):
       
 def image_callback(img_msg):
 
-	boundaries={{'blue':([110,150,150], [130,255,255]),
+	boundaries={'blue':([110,150,150], [130,255,255]),
             'orange':([15,150,150], [20,255,255]),
             'red':([0,150,150], [7,255,255]),
             'yellow':([25,150,150], [35,255,255]),
             'green':([55,150,150], [65,255,255])   
            }   
-    	        }
+    	        
 
 	
 	#read the converted input image
