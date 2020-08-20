@@ -18,4 +18,8 @@ https://drive.google.com/file/d/1yW7MvsKhlJg3W4dD9YL6cU6GtF_iVoP0/view?usp=shari
 download the file 'yolov3-tiny-obj.cfg' from this folder and add it to the location:
 \
 catkin_workspace/src/darknet_ros/darknet_ros/yolo_network_config/cfg/
+\
+replace the files yolo_v3.launch and darknet_ros.launch from this folder to :
+\
+catkin_workspace/src/darknet_ros/darknet_ros/launch/
 
