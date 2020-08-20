@@ -2,6 +2,7 @@
 import cv2
 from skimage.feature import hog
 import numpy as np
+import sys
 # from sklearn.externals import joblib
 import joblib
 # import tensorflow.keras as keras
@@ -21,6 +22,8 @@ image_height = 28
 image_width = 28
 num_channels = 1
 num_classes = 10
+
+Dict={'red':None,'green':None,'yellow':None,'blue':None,'orange':None}
 
 def build_model():
     model = Sequential()
@@ -42,7 +45,7 @@ def build_model():
     return model
 
 model = build_model()
-model.load_weights('/home/vishwajeet/catkin_ws/src/ethan_control/test.h5')
+model.load_weights('test.h5')
 
 def predictor(model_name,img):
   global model
@@ -136,6 +139,9 @@ def image_callback(img_msg):
 			continue
         # Calculate the HOG features
 		cv2.putText(im, str(predictor('my_model.h5',roi))+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
+		if predictor('my_model.h5',roi)!=None:
+			Dict[str(color)]=str(predictor('my_model.h5',roi))
+	
 	cv2.imshow('img',im)
     #show  the frame with detection
 	cv2.waitKey(3)		
@@ -146,10 +152,14 @@ if __name__ == '__main__':
 		#initialise the ros node
 		rospy.init_node('realtime_test', anonymous=True)
 		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-		sub_image = rospy.Subscriber("/camera1/image_raw", Image, image_callback)
+		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
-		rospy.spin()
-
+		if any([v==None for v in Dict.values()])==True:
+			rospy.spin()
+		else:
+			file1=open("code.txt","w")
+			file1.write(Dict['red']+'\n'+Dict['green']+'\n'+Dict['yellow']+'\n'+Dict['blue']+'\n'+Dict['orange'])
+			sys.exit()
 	except rospy.ROSInterruptException:
 		rospy.loginfo("node terminated")
