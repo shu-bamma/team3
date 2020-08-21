@@ -5,7 +5,9 @@ https://support.atlassian.com/bitbucket-cloud/docs/set-up-an-ssh-key/
 \
 clone the repo yolo_darknet via SSH after setting up ssh in your github account:
 \
-https://github.com/leggedrobotics/darknet_ros
+cd catkin_workspace/src
+git clone --recursive git@github.com:leggedrobotics/darknet_ros.git
+catkin_make -DCMAKE_BUILD_TYPE=Release
 \
 download weights from following link and add it to the repo at location:
 \
