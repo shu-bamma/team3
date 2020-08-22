@@ -50,13 +50,11 @@
       <box size="${length} ${width} ${height}"/>
     </geometry>
   </collision>
-  <visual>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+  <visual name="visual_chassis">
     <geometry>
       <box size="${length} ${width} ${height}"/>
     </geometry>
-    <material name="blue"/>
-  </visual>
+  </visual>>
 
 </link>
 
