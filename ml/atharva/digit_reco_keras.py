@@ -3,6 +3,9 @@ import cv2
 from skimage.feature import hog
 import numpy as np
 import sys
+from PIL import Image, ImageOps
+import PIL.Image
+from skimage import transform
 # from sklearn.externals import joblib
 import joblib
 # import tensorflow.keras as keras
@@ -47,18 +50,21 @@ def build_model():
 model = build_model()
 model.load_weights('test.h5')
 
+def load(im):
+
+   nk=np.zeros((1,28,28,1),dtype='float')
+   np_image = np.array(im).astype('float32')/255
+   nk[0,:,:,0]=np_image
+#np_image = transform.resize(np_image, (28, 28, 1))
+   #np_image = np.expand_dims(np_image, axis=0)
+   return nk
 def predictor(model_name,img):
   global model
-  nl=np.array(img,dtype='float')
-  nk=np.zeros((1,28,28,1),dtype='float')
-  nk[0,:,:,0]=nl
-  res=model.predict_on_batch(nk)
-  res=np.around(res)
-  for i in range(res.shape[1]):
-    if res[0,i]==1:
-
-      print(i)
-      return i
+  image = load(img)
+  res=model.predict(image)
+  i=np.argmax(res, axis=1)
+  prob=res[0,i]
+  return i,prob
 def assert_color(img):
     ar=np.array(img,dtype='int')
     cnt=0
@@ -139,7 +145,11 @@ def image_callback(img_msg):
 		except:
 			continue
         # Calculate the HOG features
-		cv2.putText(im, str(predictor('my_model.h5',roi))+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
+		cls , prob = predictor('my_model.h5',roi)
+		if prob>0.7:
+				
+			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
+
 		if predictor('my_model.h5',roi)!=None:
 			Dict[str(color)]=str(predictor('my_model.h5',roi))
 	
