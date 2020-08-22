@@ -80,12 +80,11 @@ def assert_color(img):
       
 def image_callback(img_msg):
 
-	boundaries={'blue':([110,150,150], [130,255,255]),
-            'orange':([15,150,150], [20,255,255]),
-            'red':([0,150,150], [7,255,255]),
-            'yellow':([25,150,150], [35,255,255]),
-            'green':([55,150,150], [65,255,255])   
-           }
+	boundaries={'blue':([110,100,100], [130,255,255]),
+		    'orange':([9,100,100], [29,255,255]),
+		    'red':([0,100,100], [4,255,255]),
+		    'yellow':([20,100,100], [40,255,255]),
+		    'green':([50,100,100], [70,255,255])}
 
     	        
 
@@ -93,6 +92,7 @@ def image_callback(img_msg):
 	global Dict
 	try:
 		im=bridge.imgmsg_to_cv2(img_msg,"bgr8")
+		sec=bridge.imgmsg_to_cv2(img_msg,"bgr8")
 	except CvBridgeError,e:
 		rospy.logerr("CvBridgeError: {0}".format(e))
 
@@ -120,8 +120,9 @@ def image_callback(img_msg):
 	for rect in rects:
 		# Draw the rectangles 
 		color=''
+		imCrop = sec[int(rect[1]):int(rect[1]+rect[3]), int(rect[0]):int(rect[0]+rect[2])]
 		cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
-		imCrop = im[int(rect[1]):int(rect[1]+rect[3]), int(rect[0]):int(rect[0]+rect[2])]
+		
 		hsv = cv2.cvtColor(imCrop, cv2.COLOR_BGR2HSV)
 		for key,value in boundaries.items():
 			# create NumPy arrays from the boundaries
@@ -130,7 +131,7 @@ def image_callback(img_msg):
 			mask = cv2.inRange(hsv, lower, upper)
 			# find the colors within the specified boundaries and apply
             # the mask
-			if assert_color(mask)== 1:     #alternative: if cv2.countNonZero(mask) != 0:
+			if cv2.countNonZero(mask) != 0:     #alternative: if cv2.countNonZero(mask) != 0:
 				color=key
 				break
 		# Make the rectangular region around the digit
@@ -144,9 +145,9 @@ def image_callback(img_msg):
 			roi = cv2.dilate(roi, (3, 3))
 		except:
 			continue
-        # Calculate the HOG features
+
 		cls , prob = predictor('my_model.h5',roi)
-		if prob>0.7:
+		if prob>0.9:
 				
 			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
 
