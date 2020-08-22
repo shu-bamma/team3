@@ -27,12 +27,13 @@ state_dict_ = {
 def clbk_laser(msg):
     global regions_
     regions_ = {
-        'right':  min(min(msg.ranges[0:143]), 10),
-        'fright': min(min(msg.ranges[144:287]), 10),
+        'right':  min(min(msg.ranges[0:20]), 10),
+        'fright': min(min(msg.ranges[20:287]), 10),
         'front':  min(min(msg.ranges[288:431]), 10),
-        'fleft':  min(min(msg.ranges[432:575]), 10),
-        'left':   min(min(msg.ranges[576:713]), 10),
+        'fleft':  min(min(msg.ranges[432:700]), 10),
+        'left':   min(min(msg.ranges[700:720]), 10),
     }
+    print(regions_)
 
     take_action()
 
@@ -40,7 +41,7 @@ def clbk_laser(msg):
 def change_state(state):
     global state_, state_dict_
     if state is not state_:
-        print 'Wall follower - [%s] - %s' % (state, state_dict_[state])
+        # print 'Wall follower - [%s] - %s' % (state, state_dict_[state])
         state_ = state
 
 

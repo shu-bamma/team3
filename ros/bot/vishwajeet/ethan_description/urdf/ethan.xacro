@@ -405,8 +405,8 @@
 
 <joint name="hokuyo_joint" type="fixed">
   <axis xyz="0 1 0" />
-  <origin xyz="-0.02 0 0.09" rpy="0 0 0"/>
-  <parent link="upper_platform"/>
+  <origin xyz="0.21 0 0.09" rpy="0 0 0"/>
+  <parent link="link_chassis"/>
   <child link="hokuyo_link"/>
 </joint>
 
