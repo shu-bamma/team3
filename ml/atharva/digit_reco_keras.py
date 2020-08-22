@@ -79,11 +79,12 @@ def image_callback(img_msg):
             'red':([0,150,150], [7,255,255]),
             'yellow':([25,150,150], [35,255,255]),
             'green':([55,150,150], [65,255,255])   
-           }   
+           }
+
     	        
 
-	
 	#read the converted input image
+	global Dict
 	try:
 		im=bridge.imgmsg_to_cv2(img_msg,"bgr8")
 	except CvBridgeError,e:
@@ -147,6 +148,7 @@ def image_callback(img_msg):
 	cv2.waitKey(3)		
 if __name__ == '__main__':
 	try:
+		global Dict
 		# Load the classifier
 		# clf=joblib.load("cls.pkl")
 		#initialise the ros node
