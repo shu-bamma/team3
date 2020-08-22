@@ -1,5 +1,5 @@
 #! /usr/bin/env python
- 
+#new param 
 # import ros stuff
 import rospy
 from sensor_msgs.msg import LaserScan
@@ -86,7 +86,7 @@ def take_action():
 
 def find_wall():
     msg = Twist()
-    # msg.linear.x = 0.2
+    msg.linear.x = 0.04
     msg.angular.z = 0.3
     return msg
 
@@ -99,7 +99,7 @@ def follow_the_wall():
     global regions_
     
     msg = Twist()
-    msg.linear.x = 0.25
+    msg.linear.x = 0.4
     return msg
 def main():
     global pub_
@@ -110,7 +110,7 @@ def main():
     
     sub = rospy.Subscriber('/scan', LaserScan, clbk_laser)
     
-    rate = rospy.Rate(20)
+    rate = rospy.Rate(10)
     print("yo")
     while not rospy.is_shutdown():
         msg = Twist()
