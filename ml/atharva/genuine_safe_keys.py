@@ -2,7 +2,8 @@
 
 
 import time
-
+from sensor_msgs.msg import PointCloud2
+from sensor_msgs import point_cloud2
 import os
 
 # from sklearn.externals import joblib
@@ -27,6 +28,30 @@ image_height = 28
 image_width = 28
 num_channels = 1
 num_classes = 10
+
+r={'0':[0,0,0,0],'1':[0,0,0,0],'2':[0,0,0,0],'3':[0,0,0,0],'4':[0,0,0,0],'5':[0,0,0,0],'6':[0,0,0,0],'7':[0,0,0,0],'8':[0,0,0,0],'9':[0,0,0,0]}
+yxz={0:[0,0,0],1:[0,0,0],2:[0,0,0],3:[0,0,0],4:[0,0,0],5:[0,0,0],6:[0,0,0],7:[0,0,0],8:[0,0,0],9:[0,0,0]}
+
+def get_centres(rect):
+	a=[]
+	a.append(rect[0]+rect[2]/2)
+	a.append(rect[1]+rect[3]/2)
+	return a
+
+
+def callback_pointcloud(data):
+    global r
+    global xyz
+    assert isinstance(data, PointCloud2)
+    gen = list(point_cloud2.read_points(data, field_names=("x", "y", "z"), skip_nans=False))
+    for i in range(10):
+    	I=str(i)
+    	uv=get_centres(r[I])
+    	po=(uv[0]*640+uv[1])-1
+    	xyz[i]=[gen[po][0],gen[po][1],gen[po][2]]
+    	#xyz coordinates being stored corresponding to the numbers
+    time.sleep(1)
+
 
 def build_model():
     model = Sequential()
@@ -181,6 +206,8 @@ def image_callback(img_msg):
 		if(len(rects)==12):
 			cls , pic = get_key(rect)    
 			cv2.putText(im,str(cls), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
+			global r
+			r[str(cls)]=[rect[0],rect[1],rect[2],rect[3]]
 	cv2.imshow('img',im)
     #show  the frame with detection
 	cv2.waitKey(3)		
@@ -194,6 +221,9 @@ if __name__ == '__main__':
 		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
+		#for xyz coordinates
+		rospy.init_node('pcl_listener', anonymous=True)
+		rospy.Subscriber('/camera/depth/points', PointCloud2, callback_pointcloud)
 		rospy.spin()
 
 	except rospy.ROSInterruptException:
