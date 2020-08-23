@@ -35,11 +35,11 @@ for i in range(r):
     if q1 < p/2:    #Middle Arm Angle
        c=  p/2 - q1
        d=  q2  # End arm angle 
-       print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
+       #print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
     else:
        c= p/2 - q1 
        d= q2 
-       print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
+       #print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
     e=  atan(y/x)  # Disk Angle
 
 
