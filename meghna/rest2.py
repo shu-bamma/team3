@@ -29,7 +29,7 @@ for i in range(r):
     y=angle[3*i+1] 
     z=angle[3*i+2]
 
-    q2=  acos( ( (a_1**2 + a_2**2) - (x**2 + y**2 + z**2) )/2*a_1*a_2)
+    q2=  acos( ( (a_1**2 + a_2**2) - (x**2 + y**2 + z**2) )/(2*a_1*a_2))
     q1= atan( (z) / (np.sqrt(x**2 + y**2)) ) + atan( (a_2*(sin(q2)) )/(a_1 +  a_2*(cos(q2)) ) )
 
     if q1 < p/2:    #Middle Arm Angle
