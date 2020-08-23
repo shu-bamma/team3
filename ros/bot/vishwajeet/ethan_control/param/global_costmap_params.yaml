@@ -1,5 +1,5 @@
 global_costmap:
-  global_frame: map
+  global_frame: odom
   robot_base_frame: link_chassis
 
   update_frequency: 10.0

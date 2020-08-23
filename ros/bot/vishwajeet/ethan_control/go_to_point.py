@@ -68,14 +68,14 @@ def clbk_odom(msg):
     global yaw_
     
     # position
-    position_ = msg.pose[1].position
+    position_ = msg.pose.pose.position
     
     # yaw
     quaternion = (
-        msg.pose[1].orientation.x,
-        msg.pose[1].orientation.y,
-        msg.pose[1].orientation.z,
-        msg.pose[1].orientation.w)
+        msg.pose.pose.orientation.x,
+        msg.pose.pose.orientation.y,
+        msg.pose.pose.orientation.z,
+        msg.pose.pose.orientation.w)
     euler = transformations.euler_from_quaternion(quaternion)
     yaw_ = euler[2]
     # print(position_)
@@ -93,10 +93,10 @@ def fix_yaw(des_pos):
     twist_msg = Twist()
     # twist_msg.linear.x = 0.05 
     if math.fabs(err_yaw) > yaw_precision_:
-        twist_msg.angular.z = -(kp_angle*err_yaw + kd_angle*(err_yaw- prev_err_yaw) + ki_angle*Sum)/1.2
+        a = -(kp_angle*err_yaw + kd_angle*(err_yaw- prev_err_yaw) )
+        twist_msg.angular.z = (a/abs(a))*min(abs(a),0.8)
 
     pub.publish(twist_msg)
-    print(err_yaw)
     prev_err_yaw = err_yaw
 
     # state change conditions
@@ -114,7 +114,8 @@ def orient_yaw(des_yaw):
     twist_msg = Twist()
     # twist_msg.linear.x = 0.05 
     if math.fabs(err_yaw) > yaw_precision_:
-        twist_msg.angular.z = -(kp_angle*err_yaw + kd_angle*(err_yaw- prev_err_yaw)+ ki_angle*Sum)/1.2
+        a = -(kp_angle*err_yaw + kd_angle*(err_yaw- prev_err_yaw) )
+        twist_msg.angular.z = (a/abs(a))*min(abs(a),0.5)
 
     pub.publish(twist_msg)
     # print("yaw")
@@ -161,13 +162,13 @@ def main():
     
     pub = rospy.Publisher('/diff_drive_controller/cmd_vel', Twist, queue_size=1)
     status_pub = rospy.Publisher('/move_bot/status', Bool, queue_size=1)
-    sub_odom = rospy.Subscriber('/gazebo/model_states',ModelStates, clbk_odom)
+    sub_odom = rospy.Subscriber('/odom',Odometry, clbk_odom)
     target_sub = rospy.Subscriber('/move_bot/goal',Pose, clbk_goal)
     mat = Float64MultiArray()
     mat.layout.dim.append(MultiArrayDimension())
     mat.layout.dim.append(MultiArrayDimension())
     gripper_pub = rospy.Publisher('/gripper_controller/command', Float64MultiArray, queue_size=1)
-    rate =rospy.Rate(20)
+    rate =rospy.Rate(200)
     extend = 0
     gripper_extend = 0
     global message_arrived
@@ -188,7 +189,7 @@ def main():
                 status_msg.data = status
                 status_pub.publish(status_msg)
                 print("done")
-        rate.sleep()
+        # rate.sleep()
                    
 
 
