@@ -2,13 +2,15 @@
  
 # import ros stuff
 import rospy
+import sys
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from tf import transformations
-
 import math
-
+from darknet_ros_msgs.msg import BoundingBoxes
+from std_msgs.msg import Header
+from std_msgs.msg import String
 
 pub_ = None
 regions_ = {
@@ -101,6 +103,14 @@ def follow_the_wall():
     msg = Twist()
     msg.linear.x = 0.4
     return msg
+a=" "
+def callback(data):
+    for box in data.bounding_boxes:
+        global a
+        a=box.Class
+
+
+
 def main():
     global pub_
     
@@ -123,9 +133,13 @@ def main():
             pass
         else:
             rospy.logerr('Unknown state!')
-        
+        #terminating when we detect safe
+        rospy.init_node('bbmsg', anonymous=True)
+        rospy.Subscriber('/darknet_ros/bounding_boxes', BoundingBoxes , callback)        
         pub_.publish(msg)
-        
+        global a
+        if a=="safe":
+            sys.exit()
         rate.sleep()
 
 main()
