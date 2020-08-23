@@ -62,7 +62,7 @@ for i in range(r):
             if i > 100000:
                break
     print("Pressed")
-    #rospy.sleep(2)
+    rospy.sleep(2)
 
 print("Now you can work!")
 
