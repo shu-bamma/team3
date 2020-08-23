@@ -77,7 +77,7 @@ def assert_color(img):
                 else:
                     continue
     return 0
-      
+temp=[]
 def image_callback(img_msg):
 
 	boundaries={'blue':([110,100,100], [130,255,255]),
@@ -151,8 +151,11 @@ def image_callback(img_msg):
 				
 			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
 
-		if predictor('my_model.h5',roi)!=None:
-			Dict[str(color)]=str(predictor('my_model.h5',roi))
+	if cls!=None and color!=None:
+		if len(temp)==9:
+
+			Dict[str(color)]=str(return_max(temp))
+			temp=[]
 	
 	cv2.imshow('img',im)
     #show  the frame with detection
