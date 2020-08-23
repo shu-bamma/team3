@@ -31,15 +31,9 @@ for i in range(r):
 
     q2=  acos( ( (a_1**2 + a_2**2) - (x**2 + y**2 + z**2) )/(2*a_1*a_2))
     q1= atan( (z) / (np.sqrt(x**2 + y**2)) ) + atan( (a_2*(sin(q2)) )/(a_1 +  a_2*(cos(q2)) ) )
-
-    if q1 < p/2:    #Middle Arm Angle
-       c=  p/2 - q1
-       d=  q2  # End arm angle 
-       #print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
-    else:
-       c= p/2 - q1 
-       d= q2 
-       #print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
+    c=  p/2 - q1    #Middle Arm Angle
+    d=  q2  # End arm angle 
+    #print('q1=',q1,'q2=',q2,'c=',c,'d=',d)
     e=  atan(y/x)  # Disk Angle
 
 
