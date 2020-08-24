@@ -3,11 +3,9 @@ import cv2
 from skimage.feature import hog
 import numpy as np
 import sys
-from PIL import Image, ImageOps
-import PIL.Image
-from skimage import transform
+from collections import Counter
 # from sklearn.externals import joblib
-import joblib
+
 # import tensorflow.keras as keras
 from tensorflow.keras.models import load_model
 #function for asserting color configuratoin
@@ -48,8 +46,14 @@ def build_model():
     return model
 
 model = build_model()
-model.load_weights('test.h5')
-
+model.load_weights('/home/atharva/catkin_ws/src/turtlebot3/video_generator/scripts/test.h5')
+def return_max(arr):
+  key_list=list(Counter(arr).keys())
+  count_list=list(Counter(arr).values())
+  for i in range(len(count_list)):
+    if count_list[i]==max(count_list):
+      break
+  return key_list[i]
 def load(im):
 
    nk=np.zeros((1,28,28,1),dtype='float')
@@ -64,7 +68,7 @@ def predictor(model_name,img):
   res=model.predict(image)
   i=np.argmax(res, axis=1)
   prob=res[0,i]
-  return i,prob
+  return int(i),prob
 def assert_color(img):
     ar=np.array(img,dtype='int')
     cnt=0
@@ -87,7 +91,7 @@ def image_callback(img_msg):
 		    'green':([50,100,100], [70,255,255])}
 
     	        
-
+	global temp
 	#read the converted input image
 	global Dict
 	try:
@@ -114,14 +118,25 @@ def image_callback(img_msg):
 		area = cv2.contourArea(ctr)
 		if area>500 and area<10000:
 			rect=cv2.boundingRect(ctr)
-			if rect[2]/rect[3]<4 and rect[3]/rect[2]<4:
-				if rect[2]<400:
-					rects.append(rect)
+			perimeter = cv2.arcLength(ctr,True)
+			#print(perimeter)
+			
+			if perimeter<1400:
+
+				if float(rect[2])/rect[3]<2 and float(rect[3])/rect[2]<2 :
+					#print(float(rect[3])/rect[2],' ',float(rect[2])/rect[3])
+					if rect[2]<400:
+						rects.append(rect)
+		#area = cv2.contourArea(ctr)
+		#if area>500 and area<10000:
+		
+		
+		
 	for rect in rects:
 		# Draw the rectangles 
 		color=''
 		imCrop = sec[int(rect[1]):int(rect[1]+rect[3]), int(rect[0]):int(rect[0]+rect[2])]
-		cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
+		#cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
 		
 		hsv = cv2.cvtColor(imCrop, cv2.COLOR_BGR2HSV)
 		for key,value in boundaries.items():
@@ -147,16 +162,20 @@ def image_callback(img_msg):
 			continue
 
 		cls , prob = predictor('my_model.h5',roi)
-		if prob>0.9:
-				
+		if prob>0.99:
+			cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
 			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
-
-	"""if cls!=None and color!=None:
-		if len(temp)==9:
-
-			Dict[str(color)]=str(return_max(temp))
-			temp=[]
-	"""
+			if cls!=None and color!=None:
+				
+				if len(temp)<6:
+					temp.append(int(cls))
+					if len(temp)==5:
+						Dict[str(color)]=str(return_max(temp))
+						temp=[]
+			"""if cls!=None and color!=None:"""
+	
+				
+			
 	cv2.imshow('img',im)
     #show  the frame with detection
 	cv2.waitKey(3)		
