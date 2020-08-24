@@ -77,7 +77,7 @@ def assert_color(img):
                 else:
                     continue
     return 0
-      
+temp=[]
 def image_callback(img_msg):
 
 	boundaries={'blue':([110,100,100], [130,255,255]),
@@ -138,11 +138,11 @@ def image_callback(img_msg):
 		leng = int(rect[3] * 1.6)
 		pt1 = int(rect[1] + rect[3] // 2 - leng // 2)
 		pt2 = int(rect[0] + rect[2] // 2 - leng // 2)
-		roi = im_th[pt1:pt1+leng, pt2:pt2+leng]
+		roi = th3[pt1:pt1+leng, pt2:pt2+leng]
         #resize the image
 		try:
 			roi = cv2.resize(roi, (28, 28), interpolation=cv2.INTER_AREA)
-			roi = cv2.dilate(roi, (3, 3))
+			#roi = cv2.dilate(roi, (3, 3))
 		except:
 			continue
 
@@ -151,9 +151,12 @@ def image_callback(img_msg):
 				
 			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
 
-		if predictor('my_model.h5',roi)!=None:
-			Dict[str(color)]=str(predictor('my_model.h5',roi))
-	
+	"""if cls!=None and color!=None:
+		if len(temp)==9:
+
+			Dict[str(color)]=str(return_max(temp))
+			temp=[]
+	"""
 	cv2.imshow('img',im)
     #show  the frame with detection
 	cv2.waitKey(3)		
