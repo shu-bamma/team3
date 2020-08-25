@@ -24,6 +24,7 @@ from skimage import transform
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from std_msgs.msg import Bool
 image_height = 28
 image_width = 28
 num_channels = 1
@@ -62,9 +63,13 @@ def build_model():
     return model
 
 model = build_model()
+i = 0
 model.load_weights('/home/vishwajeet/catkin_ws/src/ethan_control/test.h5')
-#model = load_model('my_model.h5')
-
+rospy.init_node('realtime_test', anonymous=True)
+print("waiting")
+start = rospy.wait_for_message("/move_bot/status", Bool)
+print("started!!")
+stop_bot = rospy.Publisher("/stop_bot",Bool)
 def load(im):
 
    nk=np.zeros((1,28,28,1),dtype='float')
@@ -127,6 +132,7 @@ def image_callback(img_msg):
 
 	x_list.sort()
 	y_list.sort()
+
 	def get_key(rect):
 		leng = int(rect[3] * 0.7)
 		pt1 = int(rect[1] + rect[3] // 2 - leng // 2)
@@ -138,7 +144,13 @@ def image_callback(img_msg):
 		imCrop = cv2.resize(imCrop, (28, 28), interpolation=cv2.INTER_AREA)
 		imCrop = cv2.dilate(imCrop, (3, 3))
 		if rect[0] in range(x_list[0]-15,x_list[0]+15):
-			print("yo")
+			global i 
+			i +=1 
+			print(i)
+			stop_bot.publish(True)
+			# start = rospy.wait_for_message("/start_reco", Bool)
+
+
 			if rect[1] in range(y_list[0]-15,y_list[0]+15):
 				cls,prob=predictor('my_model.h5',imCrop)
 			
@@ -208,9 +220,8 @@ if __name__ == '__main__':
 		# Load the classifier
 		# clf=joblib.load("cls.pkl")
 		#initialise the ros node
-		rospy.init_node('realtime_test', anonymous=True)
 		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-		sub_image = rospy.Subscriber("/camera/camera/color/image_raw", Image, image_callback)
+		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
 		#for xyz coordinates

@@ -577,10 +577,10 @@
       <pose frame=''>0.39563 -0.04369 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>5827 87000000</sim_time>
-      <real_time>5867 377800391</real_time>
-      <wall_time>1597874008 352797765</wall_time>
-      <iterations>5827087</iterations>
+      <sim_time>5974 617000000</sim_time>
+      <real_time>493 183442699</real_time>
+      <wall_time>1598295502 402314988</wall_time>
+      <iterations>147530</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -662,7 +662,7 @@
         </link>
       </model>
       <model name='wall5'>
-        <pose frame=''>0.114501 -3.99919 0 0 0 -1.57366</pose>
+        <pose frame=''>0.114501 -3.99919 -0 0 0 -1.57366</pose>
         <scale>1 1 1</scale>
         <link name='chassis'>
           <pose frame=''>0.114501 -3.99919 1.5 0 0 -1.57366</pose>
@@ -712,13 +712,13 @@
         </link>
       </model>
       <model name='wood_cube'>
-        <pose frame=''>-2.00156 -3.51565 -0.000515 0.00102 7e-06 0</pose>
+        <pose frame=''>-2.00156 -3.51566 -0.000516 0.001018 2e-06 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-2.00156 -3.51616 0.499485 0.00102 7e-06 0</pose>
+          <pose frame=''>-2.00156 -3.51616 0.499484 0.001018 2e-06 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.052685 -0.045652 0.020186 0.091261 -0.105342 -4.6e-05</acceleration>
-          <wrench>-0.027222 -0.023588 0.01043 0 -0 0</wrench>
+          <acceleration>-0.140535 -0.079806 0.014972 0.159478 -0.281039 0.000368</acceleration>
+          <wrench>-0.072615 -0.041236 0.007736 0 -0 0</wrench>
         </link>
       </model>
       <model name='wood_cube_2'>
@@ -727,32 +727,35 @@
         <link name='link'>
           <pose frame=''>-0.343039 0.350502 0.498989 1.6e-05 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.005804 -0 2e-06 0 -0.011607 0</acceleration>
-          <wrench>-0.002999 -0 1e-06 0 -0 0</wrench>
+          <acceleration>0.007313 0 -2e-06 0 0.014628 3e-06</acceleration>
+          <wrench>0.003779 0 -1e-06 0 -0 0</wrench>
         </link>
       </model>
       <model name='wood_cube_small'>
-        <pose frame=''>-1.77646 3.21921 -0.001012 -3e-06 0 0</pose>
+        <pose frame=''>-1.77646 3.21921 -0.001013 -3e-06 0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-1.77646 3.21921 0.198988 -3e-06 0 0</pose>
+          <pose frame=''>-1.77646 3.21921 0.173987 -3e-06 0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0.007836 -0 0 0 0.039155 5.7e-05</acceleration>
-          <wrench>0.004049 -0 0 0 -0 0</wrench>
+          <acceleration>0.008141 0 0 -0 0.046447 0.000161</acceleration>
+          <wrench>0.004206 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='wood_cube_small_0'>
-        <pose frame=''>-3.07733 -0.999309 -0.001012 -3e-06 -0 -0</pose>
+        <pose frame=''>-3.07733 -0.999309 -0.001013 -3e-06 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-3.07733 -0.999309 0.198988 -3e-06 -0 -0</pose>
+          <pose frame=''>-3.07733 -0.999309 0.173987 -3e-06 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.007836 0 -0 0 -0.039155 -5.7e-05</acceleration>
-          <wrench>-0.004049 0 -0 0 -0 0</wrench>
+          <acceleration>-0.008141 -0 -0 -0 -0.046447 -0.000161</acceleration>
+          <wrench>-0.004206 -0 -0 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>
         <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
+      <light name='user_point_light_0'>
+        <pose frame=''>0 0 5 0 -0 0</pose>
       </light>
     </state>
     <model name='wood_cube'>
@@ -1208,10 +1211,26 @@
     </model>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>7.10025 4.56989 18.1219 0 1.0938 -2.68465</pose>
+        <pose frame=''>0.780508 -0.439651 10.4684 0 1.3818 -1.18065</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <audio>
+      <device>default</device>
+    </audio>
+    <light name='user_point_light_0' type='point'>
+      <pose frame=''>-0.586485 -0.34484 1 0 -0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>20</range>
+        <constant>0.5</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <cast_shadows>0</cast_shadows>
+      <direction>0 0 -1</direction>
+    </light>
   </world>
 </sdf>

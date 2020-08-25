@@ -18,13 +18,13 @@
   <xacro:property name="holder_l" value="0.01" />
   <xacro:property name="holder_r" value="0.01" />
   <xacro:property name="holder_mass" value="0.2" />
-  <xacro:property name="mass" value="100" />
+  <xacro:property name="mass" value="80" />
   <xacro:property name="hinge_r" value="0.02" />
   <xacro:property name="hinge_l" value="0.01" />
   <xacro:property name="hinge_mass" value="0.2" />
   <xacro:include filename="$(find ethan_description)/urdf/macro.xacro" />
   <xacro:include filename="$(find ethan_description)/urdf/gazebo.xacro" />
-  <xacro:property name="wheel_mass" value="10" />
+  <xacro:property name="wheel_mass" value="5" />
   <xacro:property name="wheel_radius" value="0.05" />
   <xacro:property name="wheel_length" value="0.03" />
   <xacro:property name="upper_mass" value="0.2" />

@@ -11,7 +11,7 @@ p=pi
 #from ethan_control.msg import Angles
 
 angle=[]
-with open('Angles.txt',"r") as f:
+with open('/home/vishwajeet/catkin_ws/src/ethan_control/Angles.txt',"r") as f:
      for coord in f:
          m=coord.split()
          for i in range(len(m)):

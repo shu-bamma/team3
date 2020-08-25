@@ -8,9 +8,11 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from tf import transformations
 import math
-# from darknet_ros_msgs.msg import BoundingBoxes
+from darknet_ros_msgs.msg import BoundingBoxes
 from std_msgs.msg import Header
 from std_msgs.msg import String
+from std_msgs.msg import Bool
+
 
 pub_ = None
 regions_ = {
@@ -43,7 +45,7 @@ def clbk_laser(msg):
 def change_state(state):
     global state_, state_dict_
     if state is not state_:
-        print 'Wall follower - [%s] - %s' % (state, state_dict_[state])
+        # print 'Wall follower - [%s] - %s' % (state, state_dict_[state])
         state_ = state
 
 
@@ -56,7 +58,7 @@ def take_action():
     
     state_description = ''
     
-    d = 0.5
+    d = 0.6
     
     if regions['front'] > d and regions['fleft'] > d and regions['fright'] > d:
         state_description = 'case 1 - nothing'
@@ -89,30 +91,29 @@ def take_action():
 def find_wall():
     msg = Twist()
     msg.linear.x = 0.04
-    msg.angular.z = 0.3
+    msg.angular.z = 0.4
     return msg
 
 def turn_left():
     msg = Twist()
-    msg.angular.z = -0.3
+    msg.angular.z = -0.4
     return msg
 
 def follow_the_wall():
     global regions_
     
     msg = Twist()
-    msg.linear.x = 0.4
+    msg.linear.x = 0.5
     return msg
 a=" "
+finish=False
 def callback(data):
-    for box in data.bounding_boxes:
-        global a
-        a=box.Class
-
-
+    print(data)
+    global finish
+    finish = True
 
 def main():
-    global pub_
+    global pub_,finish
     
     rospy.init_node('reading_laser')
     
@@ -135,11 +136,16 @@ def main():
             rospy.logerr('Unknown state!')
         #terminating when we detect safe
         # rospy.init_node('bbmsg', anonymous=True)
-        # rospy.Subscriber('/darknet_ros/bounding_boxes', BoundingBoxes , callback)        
+        rospy.Subscriber('/darknet_ros/bounding_boxes', BoundingBoxes , callback)        
         pub_.publish(msg)
-        # global a
-        # if a=="safe":
-        #     sys.exit()
+        if finish:
+            break
+
         rate.sleep()
+    send_to_safe = rospy.Publisher("/go_to_safe", Bool,queue_size=1)
+    i = 0
+    while i <10000:
+        i +=1
+        send_to_safe.publish(True)
 
 main()

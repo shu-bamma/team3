@@ -8,16 +8,16 @@ control = Twist()
 def on_press(key):
     # print(key)
     if(key == Key.left):
-        control.angular.z = -0.5
+        control.angular.z = -1
         pub.publish(control)
     if(key == Key.right):
-        control.angular.z =0.5
+        control.angular.z =1
         pub.publish(control)
     if(key == Key.down):
-        control.linear.x = -0.5
+        control.linear.x = -1
         pub.publish(control)
     if(key == Key.up):
-        control.linear.x = 0.5
+        control.linear.x = 1
         pub.publish(control)
 
 def on_release(key):

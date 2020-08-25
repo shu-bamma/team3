@@ -7,6 +7,7 @@ import numpy as np
 from math import *
 from geometry_msgs.msg import Twist
 from gazebo_msgs.msg import ModelStates
+from std_msgs.msg import Bool
 
 
 def callback(msg):
@@ -18,13 +19,16 @@ def callback(msg):
     # print("yo")
 
 if __name__ =="__main__":
-    rospy.init_node("publisher")
+    rospy.init_node("normal_State")
     gripper_pub = rospy.Publisher('/platform_state_controller/command', Float64MultiArray, queue_size=1)
     bot_control_pub = rospy.Publisher('/diff_drive_controller/cmd_vel',Twist,queue_size = 2)
+    print("waiting")
+    start = rospy.wait_for_message("/normal", Bool)
+    print("started!!")
     mat = Float64MultiArray()
     mat.layout.dim.append(MultiArrayDimension())
     mat.layout.dim.append(MultiArrayDimension())
-    mat.data = [0.0,pi/2,0.001,0.001,0.001]
+    mat.data = [0.715,0.001,0.001,0.001,0.001]
     i = 0
     while not rospy.is_shutdown():
         i +=1

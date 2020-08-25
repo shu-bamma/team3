@@ -107,8 +107,6 @@ def fix_yaw(des_pos):
 
 def orient_yaw(des_yaw):
     global yaw_, pub, yaw_precision_, state_,prev_err_yaw,Sum
-    if yaw_<0:
-        yaw_ = math.pi*2 -abs(yaw_)
     err_yaw = des_yaw - yaw_
     Sum +=err_yaw
     twist_msg = Twist()
