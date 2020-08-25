@@ -5,7 +5,6 @@ import numpy as np
 import sys
 from collections import Counter
 # from sklearn.externals import joblib
-
 # import tensorflow.keras as keras
 from tensorflow.keras.models import load_model
 #function for asserting color configuratoin
@@ -47,6 +46,7 @@ def build_model():
 
 model = build_model()
 model.load_weights('/home/atharva/catkin_ws/src/turtlebot3/video_generator/scripts/test.h5')
+
 def return_max(arr):
   key_list=list(Counter(arr).keys())
   count_list=list(Counter(arr).values())
@@ -81,7 +81,8 @@ def assert_color(img):
                 else:
                     continue
     return 0
-temp=[]
+temp={'red':list(),'green':list(),'yellow':list(),'blue':list(),'orange':list()}
+
 def image_callback(img_msg):
 
 	boundaries={'blue':([110,100,100], [130,255,255]),
@@ -90,10 +91,10 @@ def image_callback(img_msg):
 		    'yellow':([20,100,100], [40,255,255]),
 		    'green':([50,100,100], [70,255,255])}
 
-    	        
+    	global Dict
 	global temp
 	#read the converted input image
-	global Dict
+	
 	try:
 		im=bridge.imgmsg_to_cv2(img_msg,"bgr8")
 		sec=bridge.imgmsg_to_cv2(img_msg,"bgr8")
@@ -121,12 +122,12 @@ def image_callback(img_msg):
 			perimeter = cv2.arcLength(ctr,True)
 			#print(perimeter)
 			
-			if perimeter<1400:
+			#if perimeter<1400:
 
-				if float(rect[2])/rect[3]<2 and float(rect[3])/rect[2]<2 :
-					#print(float(rect[3])/rect[2],' ',float(rect[2])/rect[3])
-					if rect[2]<400:
-						rects.append(rect)
+			if float(rect[2])/rect[3]<2 and float(rect[3])/rect[2]<2 :
+				#print(float(rect[3])/rect[2],' ',float(rect[2])/rect[3])
+				if rect[2]<400:
+					rects.append(rect)
 		#area = cv2.contourArea(ctr)
 		#if area>500 and area<10000:
 		
@@ -134,7 +135,7 @@ def image_callback(img_msg):
 		
 	for rect in rects:
 		# Draw the rectangles 
-		color=''
+		color=None
 		imCrop = sec[int(rect[1]):int(rect[1]+rect[3]), int(rect[0]):int(rect[0]+rect[2])]
 		#cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
 		
@@ -166,12 +167,12 @@ def image_callback(img_msg):
 			cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
 			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
 			if cls!=None and color!=None:
-				
-				if len(temp)<6:
-					temp.append(int(cls))
-					if len(temp)==5:
-						Dict[str(color)]=str(return_max(temp))
-						temp=[]
+				if len(list(temp[color]))<6:
+					temp[color].append(int(cls))
+					if len(temp[color])==5:
+						Dict[str(color)]=str(return_max(temp[color]))
+						print(Dict)
+						temp[color]=[]
 			"""if cls!=None and color!=None:"""
 	
 				
@@ -190,11 +191,12 @@ if __name__ == '__main__':
 		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
+		
 		if any([v==None for v in Dict.values()])==True:
 			rospy.spin()
 		else:
 			file1=open("code.txt","w")
-			file1.write(Dict['red']+'\n'+Dict['green']+'\n'+Dict['yellow']+'\n'+Dict['blue']+'\n'+Dict['orange'])
+			file1.write(str(Dict['red'])+'\n'+str(Dict['green'])+'\n'+str(Dict['yellow'])+'\n'+str(Dict['blue'])+'\n'+str(Dict['orange']))
 			sys.exit()
 	except rospy.ROSInterruptException:
 		rospy.loginfo("node terminated")
