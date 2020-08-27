@@ -23,6 +23,7 @@ image_width = 28
 num_channels = 1
 num_classes = 10
 
+#Dictionary to store the 5 digit code
 Dict={'red':None,'green':None,'yellow':None,'blue':None,'orange':None}
 
 def build_model():
@@ -45,8 +46,10 @@ def build_model():
     return model
 
 model = build_model()
+#loading weights for keras model
 model.load_weights('/home/atharva/catkin_ws/src/turtlebot3/video_generator/scripts/test.h5')
 
+#function to return maximum count of distinct values in a list
 def return_max(arr):
   key_list=list(Counter(arr).keys())
   count_list=list(Counter(arr).values())
@@ -54,6 +57,8 @@ def return_max(arr):
     if count_list[i]==max(count_list):
       break
   return key_list[i]
+
+#function to resize image and convert to numpy array 
 def load(im):
 
    nk=np.zeros((1,28,28,1),dtype='float')
@@ -62,6 +67,8 @@ def load(im):
 #np_image = transform.resize(np_image, (28, 28, 1))
    #np_image = np.expand_dims(np_image, axis=0)
    return nk
+
+#function to predict the no.
 def predictor(model_name,img):
   global model
   image = load(img)
@@ -69,22 +76,12 @@ def predictor(model_name,img):
   i=np.argmax(res, axis=1)
   prob=res[0,i]
   return int(i),prob
-def assert_color(img):
-    ar=np.array(img,dtype='int')
-    cnt=0
-    for i in range(ar.shape[0]):
-        for j in range(ar.shape[1]):
-            if ar[i,j]==255:
-                cnt=cnt+1
-                if cnt>(ar.shape[0]*ar.shape[1]/100):
-                    return 1
-                else:
-                    continue
-    return 0
+
+#dictionary which stores list of no.s predicted
 temp={'red':list(),'green':list(),'yellow':list(),'blue':list(),'orange':list()}
 
 def image_callback(img_msg):
-
+	#hsv boundary limits for detecting colors
 	boundaries={'blue':([110,100,100], [130,255,255]),
 		    'orange':([9,100,100], [19,255,255]),
 		    'red':([0,100,100], [4,255,255]),
@@ -173,7 +170,7 @@ def image_callback(img_msg):
 						Dict[str(color)]=str(return_max(temp[color]))
 						print(Dict)
 						temp[color]=[]
-			"""if cls!=None and color!=None:"""
+			"""the idea implemented is that a temporary list stores the predictions for a fixed no. of times (say 10) and the prediction which appears max no. of times in those 10 counts is stored finally"""
 	
 				
 			

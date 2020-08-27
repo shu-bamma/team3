@@ -1,3 +1,5 @@
+work distributed among team members to annotate images
+\
 clone the following repo:
 https://github.com/AlexeyAB/Yolo_mark.git
 \
