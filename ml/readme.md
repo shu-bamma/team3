@@ -4,4 +4,4 @@ Yolo model: trained yolo model files
 \
 colab notebooks: code used for training keras model and yolov3 tiny
 \
-digit_recognition: code files for digit detection
+number_recognition: code files for digit detection
