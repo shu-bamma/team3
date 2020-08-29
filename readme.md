@@ -1,4 +1,7 @@
 
+#  Here is how our bot looks !
+![](images/bots.png)
+
 #  Final Result
 ![](images/press.gif)
 
