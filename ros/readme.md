@@ -1,7 +1,7 @@
 
 
 
- # For launching the bot with world
+# For launching the bot with world
 
 
 Copy  three folders given in bot folder to your ros workspace
@@ -15,7 +15,7 @@ Then,
 `rosrun ethan_control rest.py`
  (this command is neccessary for to make gripper in rest position)
 
-**For navigation of the bot and performing the whole task**
+# For navigation of the bot and performing the whole task
 
 Launch following commands in different terminals
 
