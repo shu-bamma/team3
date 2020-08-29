@@ -13,7 +13,7 @@ Then,
 `roslaunch ethan_control controller.launch`
 
 `rosrun ethan_control rest.py`
- (this command is neccessary for to make gripper in rest position)
+ **(this command is neccessary for to make gripper in rest position)**
 
 # For navigation of the bot and performing the whole task
 
