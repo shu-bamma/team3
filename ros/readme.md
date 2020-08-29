@@ -6,7 +6,7 @@
 
 Copy  three folders given in bot folder to your ros workspace
 
-Follow the readme in Lane's Apartment folder to Include world model files in your gazebo !
+Follow the readme in Lane's Apartment folder to Include world model files in your gazebo
 
 Then,
 
@@ -17,7 +17,7 @@ Then,
 
 # For navigation of the bot and performing the whole task
 
-Launch following commands in different terminals
+Execute following commands Sequentially in different terminals
 
 `rosrun ethan_description odom_pub.py`
 
