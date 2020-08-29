@@ -1,7 +1,10 @@
 
- Copy  three folders given in bot folder to your ros workspace
 
- **For launching the bot with world**
+
+ # For launching the bot with world
+
+
+Copy  three folders given in bot folder to your ros workspace
 
 Follow the readme in Lane's Apartment folder to Include world model files in your gazebo !
 
