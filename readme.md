@@ -9,7 +9,7 @@ The Robot is launched in an unknown apartment, it has to find the passcode of sa
 ![](images/bots.png)
 
 #  Final Result
-![](images/press.gif)
+![alt-text-1](press.gif "title-1") ![alt-text-2](press.gif "title-2")
 
 # ML Folder
 1.Yolo model folder contatins the files of the yolo v3 tiny model trained on custom dataset
