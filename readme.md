@@ -1,6 +1,10 @@
 #  Problem Statement
 ![](images/ps.png)
 
+The Robot is launched in unknown appartment, it has to find the passcode of safe which is located in safe apppartment. The digits of passcode are written on walls at differrent locations robot has to recognize this digits and decode the passcode, the hint for passcode sequence is 1st digit is red, 2nd is green, 3rd is yellow, 4th is blue and 5th is orange. Once bot decodes the passcode and saves, it has to search for safe and press the keys for unlocking the 
+
+**But here is the catch !** :  Safe is at 100cm and appartment is armed with lasers which will detect any thing above 50cm, so our bot should be in a such way that it will have height less than 50cms and will be able to extend itself upto 100cms !
+
 #  Here is how our bot looks !
 ![](images/bots.png)
 
