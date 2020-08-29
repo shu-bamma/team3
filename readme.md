@@ -8,8 +8,10 @@ The Robot is launched in an unknown apartment, it has to find the passcode of sa
 #  Here is how our bot looks !
 ![](images/bots.png)
 
-#  Final Result
-![alt-text-1](images/digit_reco.gif "title-1") ![alt-text-2](images/press.gif "title-2")
+#  Final Results
+![alt-text-1](images/digit_reco.gif "title-1")
+
+![alt-text-2](images/press.gif "title-2")
 
 # ML Folder
 1.Yolo model folder contatins the files of the yolo v3 tiny model trained on custom dataset
