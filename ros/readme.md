@@ -17,7 +17,7 @@ Then,
 
 # For navigation of the bot and performing the whole task
 
-Execute following commands Sequentially in different terminals
+**Execute following commands Sequentially in different terminals**
 
 `rosrun ethan_description odom_pub.py`
 
