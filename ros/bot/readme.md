@@ -1,38 +1,38 @@
  Copy this three folders to your ros workspace
 
- **For launching the bot**
-
-`roslaunch gazebo_ros empty_world.launch`
+ **For launching the bot with world**
 
 `roslaunch ethan_control controller.launch`
 
 `rosrun ethan_control rest.py`
  (this command is neccessary for to make gripper in rest position)
 
-**For navigation of the bot**
+**For navigation of the bot and performing the whole task**
 
-Edit the explore.launch file in explore-lite package (which is installed on your laptop)
+Launch following commands in different terminals
 
-Edit its first line to this : 
-`<param name="robot_base_frame" value="link_chassis"/>`
+`rosrun ethan_description odom_pub.py`
 
-And lauch the navigation by command : 
-`roslaunch ethan_gazebo ethan.launch`
+`rosrun ethan_control go_to_point.py`
 
- **For controlling the arm**
+`rosrun ethan_control digit_reco_keras.py`
 
-end arm length : 90mm, middle arm length : 100m
+`rosrun ethan_control start_yolo.py`
 
- you can refer rest.py in ethan_control package
+`rosrun ethan_control genuine_safe_keys.py`
 
- mat.data = [a,b,c,d,e]
+`rosrun ethan_control get_safe_cords.py`
 
- a = platform position
+`rosrun ethan_control confirm_safe.py`
 
- b = camera holder angle
+`rosrun ethan_control up.py`
 
- c = middle arm angle
+`rosrun ethan_control touch.py`
 
- d = end arm angle
+`rosrun ethan_control end.py`
 
- e = disc angle
+`rosrun ethan_control wall_follow.py`
+
+
+Above all Scripts wait until they are called to do their function
+
