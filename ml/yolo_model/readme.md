@@ -13,7 +13,6 @@ catkin_make -DCMAKE_BUILD_TYPE=Release
 \
 catkin_workspace/src/darknet_ros/darknet_ros/yolo_network_config/weights/
 \
-
 4.download the file 'yolov3-tiny-obj.cfg' from this folder and add it to the location:
 \
 catkin_workspace/src/darknet_ros/darknet_ros/yolo_network_config/cfg/
