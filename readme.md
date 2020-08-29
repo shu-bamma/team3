@@ -13,7 +13,7 @@ The Robot is launched in an unknown apartment, it has to find the passcode of sa
 
 ![alt-text-2](images/press.gif "title-2")
 
-# ML Folder
+# ML
 1.Yolo model folder contatins the files of the yolo v3 tiny model trained on custom dataset
 \
 2. process involved for making custom dataset mentioned in yolo mark folder
