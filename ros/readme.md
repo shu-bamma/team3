@@ -3,6 +3,10 @@
 
  **For launching the bot with world**
 
+Follow the readme in Lane's Apartment folder to Include world model files in your gazebo !
+
+Then,
+
 `roslaunch ethan_control controller.launch`
 
 `rosrun ethan_control rest.py`
