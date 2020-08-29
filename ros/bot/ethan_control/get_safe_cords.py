@@ -63,9 +63,9 @@ pose_z = f[2,0]+bot_pose.pose.pose.position.z
 
 
 # print(pose_x,pose_y)
-goal.position.x = pose_x- 0.42
-goal.position.y = -5.00155566646
-goal.orientation.w = 1.00
+goal.position.x = pose_x- 0.41  #0.41 safe distance from wall 
+goal.position.y = pose_y
+
 print(transformations.quaternion_from_euler(0,0,0))
 print(goal)
 i = 0

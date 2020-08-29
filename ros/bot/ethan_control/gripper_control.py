@@ -20,7 +20,7 @@ with open('/home/vishwajeet/catkin_ws/src/ethan_control/Angles.txt',"r") as f:
 
 a_1=0.13 #middle arm length
 a_2 = 0.09 # end arm length
-a=0.6 # Platform Height
+a=0 # Platform Height
 b=1.5 #Camera Holder Angle
 
 r=len(angle)//3
@@ -53,11 +53,10 @@ for i in range(r):
         while not rospy.is_shutdown():
             i +=1
             gripper_pub.publish(mat)  
-            if i > 100000:
+            if i > 10000:
                break
     print("Pressed")
     rospy.sleep(2)
 
 print("Now you can work!")
-
 

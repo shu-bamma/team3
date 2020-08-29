@@ -2,8 +2,9 @@
 import cv2
 from skimage.feature import hog
 import numpy as np
+import sys
+from collections import Counter
 # from sklearn.externals import joblib
-import joblib
 # import tensorflow.keras as keras
 from tensorflow.keras.models import load_model
 #function for asserting color configuratoin
@@ -21,6 +22,8 @@ image_height = 28
 image_width = 28
 num_channels = 1
 num_classes = 10
+
+Dict={'red':None,'green':None,'yellow':None,'blue':None,'orange':None}
 
 def build_model():
     model = Sequential()
@@ -44,18 +47,28 @@ def build_model():
 model = build_model()
 model.load_weights('/home/vishwajeet/catkin_ws/src/ethan_control/test.h5')
 
+def return_max(arr):
+  key_list=list(Counter(arr).keys())
+  count_list=list(Counter(arr).values())
+  for i in range(len(count_list)):
+    if count_list[i]==max(count_list):
+      break
+  return key_list[i]
+def load(im):
+
+   nk=np.zeros((1,28,28,1),dtype='float')
+   np_image = np.array(im).astype('float32')/255
+   nk[0,:,:,0]=np_image
+#np_image = transform.resize(np_image, (28, 28, 1))
+   #np_image = np.expand_dims(np_image, axis=0)
+   return nk
 def predictor(model_name,img):
   global model
-  nl=np.array(img,dtype='float')
-  nk=np.zeros((1,28,28,1),dtype='float')
-  nk[0,:,:,0]=nl
-  res=model.predict_on_batch(nk)
-  res=np.around(res)
-  for i in range(res.shape[1]):
-    if res[0,i]==1:
-
-      print(i)
-      return i
+  image = load(img)
+  res=model.predict(image)
+  i=np.argmax(res, axis=1)
+  prob=res[0,i]
+  return int(i),prob
 def assert_color(img):
     ar=np.array(img,dtype='int')
     cnt=0
@@ -68,21 +81,23 @@ def assert_color(img):
                 else:
                     continue
     return 0
-      
+temp={'red':list(),'green':list(),'yellow':list(),'blue':list(),'orange':list()}
+
 def image_callback(img_msg):
 
-	boundaries={'blue':([110,50,50], [130,255,255]),
-            'orange':([15,50,50], [20,255,255]),
-            'red':([0,150,50], [10,255,255]),
-            'yellow':([25,150,50], [35,255,255]),
-            'green':([45,150,50], [65,255,255])   
-           }   
-    	        
+	boundaries={'blue':([110,100,100], [130,255,255]),
+		    'orange':([9,100,100], [19,255,255]),
+		    'red':([0,100,100], [4,255,255]),
+		    'yellow':([20,100,100], [40,255,255]),
+		    'green':([50,100,100], [70,255,255])}
 
-	
+    	global Dict
+	global temp
 	#read the converted input image
+	
 	try:
 		im=bridge.imgmsg_to_cv2(img_msg,"bgr8")
+		sec=bridge.imgmsg_to_cv2(img_msg,"bgr8")
 	except CvBridgeError,e:
 		rospy.logerr("CvBridgeError: {0}".format(e))
 
@@ -104,14 +119,26 @@ def image_callback(img_msg):
 		area = cv2.contourArea(ctr)
 		if area>500 and area<10000:
 			rect=cv2.boundingRect(ctr)
-			if rect[2]/rect[3]<4 and rect[3]/rect[2]<4:
+			perimeter = cv2.arcLength(ctr,True)
+			#print(perimeter)
+			
+			#if perimeter<1400:
+
+			if float(rect[2])/rect[3]<2 and float(rect[3])/rect[2]<2 :
+				#print(float(rect[3])/rect[2],' ',float(rect[2])/rect[3])
 				if rect[2]<400:
 					rects.append(rect)
+		#area = cv2.contourArea(ctr)
+		#if area>500 and area<10000:
+		
+		
+		
 	for rect in rects:
 		# Draw the rectangles 
-		color=''
-		cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
-		imCrop = im[int(rect[1]):int(rect[1]+rect[3]), int(rect[0]):int(rect[0]+rect[2])]
+		color=None
+		imCrop = sec[int(rect[1]):int(rect[1]+rect[3]), int(rect[0]):int(rect[0]+rect[2])]
+		#cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
+		
 		hsv = cv2.cvtColor(imCrop, cv2.COLOR_BGR2HSV)
 		for key,value in boundaries.items():
 			# create NumPy arrays from the boundaries
@@ -120,36 +147,67 @@ def image_callback(img_msg):
 			mask = cv2.inRange(hsv, lower, upper)
 			# find the colors within the specified boundaries and apply
             # the mask
-			if assert_color(mask)== 1:     #alternative: if cv2.countNonZero(mask) != 0:
+			if cv2.countNonZero(mask) != 0:     #alternative: if cv2.countNonZero(mask) != 0:
 				color=key
 				break
 		# Make the rectangular region around the digit
 		leng = int(rect[3] * 1.6)
 		pt1 = int(rect[1] + rect[3] // 2 - leng // 2)
 		pt2 = int(rect[0] + rect[2] // 2 - leng // 2)
-		roi = im_th[pt1:pt1+leng, pt2:pt2+leng]
+		roi = th3[pt1:pt1+leng, pt2:pt2+leng]
         #resize the image
 		try:
 			roi = cv2.resize(roi, (28, 28), interpolation=cv2.INTER_AREA)
-			roi = cv2.dilate(roi, (3, 3))
+			#roi = cv2.dilate(roi, (3, 3))
 		except:
 			continue
-        # Calculate the HOG features
-		cv2.putText(im, str(predictor('my_model.h5',roi))+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
-	cv2.imshow('img',im)
+
+		cls , prob = predictor('my_model.h5',roi)
+		if prob>0.99:
+			cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
+			cv2.putText(im, str(cls)+' '+str(color), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX,1, (0, 255, 255), 2)
+			if cls!=None and color!=None:
+				if len(list(temp[color]))<18:
+					temp[color].append(int(cls))
+					if len(temp[color])==17:
+						Dict[str(color)]=str(return_max(temp[color]))
+						print(Dict)
+						temp[color]=[]
+			"""if cls!=None and color!=None:"""
+	
+				
+			
+	cv2.imshow('img',cv2.resize(im,(0,0),fx=0.4,fy=0.4))
+	cv2.imshow('threshold',cv2.resize(th3,(0,0),fx=0.4,fy=0.4))
     #show  the frame with detection
 	cv2.waitKey(3)		
 if __name__ == '__main__':
 	try:
+		global Dict
 		# Load the classifier
 		# clf=joblib.load("cls.pkl")
 		#initialise the ros node
 		rospy.init_node('realtime_test', anonymous=True)
 		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-		sub_image = rospy.Subscriber("/camera/camera/color/image_raw", Image, image_callback)
+		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
-		rospy.spin()
+		
+		while any([v==None for v in Dict.values()])==True:
+			print(Dict)
 
+		
+		file1=open("/home/vishwajeet/catkin_ws/src/ethan_control/code.txt","w")
+		file1.write(str(Dict['red'])+'\n'+str(Dict['green'])+'\n'+str(Dict['yellow'])+'\n'+str(Dict['blue'])+'\n'+str(Dict['orange']))
+		print("done!!!")
+		i = 0
+		from std_msgs.msg import Bool
+		start_yolo = rospy.Publisher("/start_yolo",Bool)
+		while i<10000:
+			i +=1
+			start_yolo.publish(True)
+
+
+		sys.exit()
 	except rospy.ROSInterruptException:
 		rospy.loginfo("node terminated")

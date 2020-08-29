@@ -24,6 +24,8 @@ from skimage import transform
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from std_msgs.msg import Bool
+from sensor_msgs.msg import PointCloud2
 image_height = 28
 image_width = 28
 num_channels = 1
@@ -39,18 +41,7 @@ def get_centres(rect):
 	return a
 
 
-def callback_pointcloud(data):
-    global r
-    global xyz
-    assert isinstance(data, PointCloud2)
-    gen = list(point_cloud2.read_points(data, field_names=("x", "y", "z"), skip_nans=False))
-    for i in range(10):
-    	I=str(i)
-    	uv=get_centres(r[I])
-    	po=(uv[0]*640+uv[1])-1
-    	xyz[i]=[gen[po][0],gen[po][1],gen[po][2]]
-    	#xyz coordinates being stored corresponding to the numbers
-    time.sleep(1)
+
 
 
 def build_model():
@@ -73,9 +64,18 @@ def build_model():
     return model
 
 model = build_model()
-model.load_weights('/home/vishwajeet/catkin_ws/src/ethan_control/test.h5')
-#model = load_model('my_model.h5')
+i = 0
+finish = False
+boxes = None
+sequence = []
+result = None
 
+model.load_weights('/home/vishwajeet/catkin_ws/src/ethan_control/test.h5')
+rospy.init_node('realtime_test', anonymous=True)
+print("waiting")
+start = rospy.wait_for_message("/move_bot/status", Bool)
+print("started!!")
+stop_bot = rospy.Publisher("/stop_bot",Bool)
 def load(im):
 
    nk=np.zeros((1,28,28,1),dtype='float')
@@ -84,6 +84,8 @@ def load(im):
 #np_image = transform.resize(np_image, (28, 28, 1))
    #np_image = np.expand_dims(np_image, axis=0)
    return nk
+
+
 def predictor(model_name,img):
   global model
   image = load(img)
@@ -113,8 +115,6 @@ def image_callback(img_msg):
 	# Threshold the image
 	th3 = cv2.adaptiveThreshold(im_gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
 		    cv2.THRESH_BINARY_INV,11,2)
-
-	    
 	_,ctrs,_ = cv2.findContours(im_th.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 	    
@@ -136,6 +136,7 @@ def image_callback(img_msg):
 
 	x_list.sort()
 	y_list.sort()
+
 	def get_key(rect):
 		leng = int(rect[3] * 0.7)
 		pt1 = int(rect[1] + rect[3] // 2 - leng // 2)
@@ -193,38 +194,79 @@ def image_callback(img_msg):
 			
 				return cls,imCrop
 			elif rect[1] in range(y_list[8]-15,y_list[8]+15):
-			
+ 			
 				return '',imCrop
-
+	global sequence
+	sequence = []
 	for rect in rects:
 		# Draw the rectangles
 		if len(rects)==12:
+			global boxes,sequence,finish
+			boxes = rects
+			# finish = True
+			
+
 
 			cv2.rectangle(im, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 3) 
 		
 		
 		if(len(rects)==12):
-			cls , pic = get_key(rect)    
+			cls , pic = get_key(rect)
+			# print(cls)
+			sequence.append(cls)  
 			cv2.putText(im,str(cls), (rect[0], rect[1]),cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
 			global r
 			r[str(cls)]=[rect[0],rect[1],rect[2],rect[3]]
-	cv2.imshow('img',im)
-    #show  the frame with detection
-	cv2.waitKey(3)		
+
+	if len(rects)==12:
+		global finish,result
+		result = im
+		print("finish")
+		finish = True
+
+	# cv2.imshow('img',im)
+ #    #show  the frame with detection
+	# cv2.waitKey(3)		
 if __name__ == '__main__':
 	try:
 		# Load the classifier
 		# clf=joblib.load("cls.pkl")
 		#initialise the ros node
-		# rospy.init_node('realtime_test', anonymous=True)
 		# Initalize a subscriber to the "/camera/rgb/image_raw" topic with the function "image_callback" as a callback
-		sub_image = rospy.Subscriber("/camera/camera/color/image_raw", Image, image_callback)
+		sub_image = rospy.Subscriber("/camera/rgb/image_raw", Image, image_callback)
 		# Initialize the CvBridge class
 		bridge=CvBridge()
 		#for xyz coordinates
-		rospy.init_node('pcl_listener', anonymous=True)
-		rospy.Subscriber('/camera/depth/points', PointCloud2, callback_pointcloud)
-		rospy.spin()
+		while not rospy.is_shutdown():
+			# print("yo")
+			if finish:
+				break
+
+		depth_data = rospy.wait_for_message("/camera/depth/points",PointCloud2)
+		gen = list(point_cloud2.read_points(depth_data, field_names=("x", "y", "z"), skip_nans=False))
+		# print(depth_data)
+		sub_image.unregister()
+		print(boxes)
+		print(sequence)
+		keys = []
+		for box in boxes:
+			print(box)
+			a = gen[1920*(box[1]) + (box[0]) -1]
+			keys.append(str(a[0])+" "+str(a[1])+" "+str(a[2]) +"\n")
+		f = open("/home/vishwajeet/catkin_ws/src/ethan_control/demofile3.txt", "w")
+
+		f.writelines(keys)
+		f.close()
+		print("text file written!")
+		i = 0
+		final = rospy.Publisher("/stick",Bool)
+		global result
+		while i <1000 :
+			i +=1
+			cv2.imshow('img',cv2.resize(result,(0,0),fx=0.4,fy=0.4))
+			cv2.waitKey(3)
+			final.publish(True)
+
 
 	except rospy.ROSInterruptException:
 		rospy.loginfo("node terminated")

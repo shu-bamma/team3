@@ -28,7 +28,7 @@ if __name__ =="__main__":
     mat = Float64MultiArray()
     mat.layout.dim.append(MultiArrayDimension())
     mat.layout.dim.append(MultiArrayDimension())
-    mat.data = [0.715,0.001,0.001,0.001,0.001]
+    mat.data = [0.715,0.0,0.001,0.001,0.001]
     i = 0
     while not rospy.is_shutdown():
         i +=1

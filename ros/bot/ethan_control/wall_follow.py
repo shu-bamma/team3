@@ -108,7 +108,7 @@ def follow_the_wall():
 a=" "
 finish=False
 def callback(data):
-    print(data)
+    # print(data)
     global finish
     finish = True
 
@@ -123,6 +123,8 @@ def main():
     
     rate = rospy.Rate(10)
     print("yo")
+    rospy.Subscriber('/darknet_ros/bounding_boxes', BoundingBoxes , callback) 
+    check_safe = rospy.Publisher("/check_safe",Bool)       
     while not rospy.is_shutdown():
         msg = Twist()
         if state_ == 0:
@@ -136,10 +138,15 @@ def main():
             rospy.logerr('Unknown state!')
         #terminating when we detect safe
         # rospy.init_node('bbmsg', anonymous=True)
-        rospy.Subscriber('/darknet_ros/bounding_boxes', BoundingBoxes , callback)        
         pub_.publish(msg)
         if finish:
-            break
+            check_safe.publish(True)
+            is_safe = rospy.wait_for_message("/confirm_safe", Bool)
+            is_safe =  str(is_safe)
+            if "False" in is_safe:
+                finish = False
+            else:
+                break
 
         rate.sleep()
     send_to_safe = rospy.Publisher("/go_to_safe", Bool,queue_size=1)

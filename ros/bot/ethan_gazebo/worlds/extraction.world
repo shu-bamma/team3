@@ -577,10 +577,10 @@
       <pose frame=''>0.39563 -0.04369 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>5974 617000000</sim_time>
-      <real_time>493 183442699</real_time>
-      <wall_time>1598295502 402314988</wall_time>
-      <iterations>147530</iterations>
+      <sim_time>6023 293000000</sim_time>
+      <real_time>69 613674954</real_time>
+      <wall_time>1598429641 370194573</wall_time>
+      <iterations>48676</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -712,13 +712,13 @@
         </link>
       </model>
       <model name='wood_cube'>
-        <pose frame=''>-2.00156 -3.51566 -0.000516 0.001018 2e-06 0</pose>
+        <pose frame=''>-2.00156 -3.51566 -0.000516 0.001018 1e-06 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-2.00156 -3.51616 0.499484 0.001018 2e-06 0</pose>
+          <pose frame=''>-2.00156 -3.51617 0.499483 0.001018 1e-06 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.140535 -0.079806 0.014972 0.159478 -0.281039 0.000368</acceleration>
-          <wrench>-0.072615 -0.041236 0.007736 0 -0 0</wrench>
+          <acceleration>-0.154532 -0.105477 0.257418 0.210891 -0.309047 -0.000108</acceleration>
+          <wrench>-0.079847 -0.0545 0.133008 0 -0 0</wrench>
         </link>
       </model>
       <model name='wood_cube_2'>
@@ -727,8 +727,8 @@
         <link name='link'>
           <pose frame=''>-0.343039 0.350502 0.498989 1.6e-05 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0.007313 0 -2e-06 0 0.014628 3e-06</acceleration>
-          <wrench>0.003779 0 -1e-06 0 -0 0</wrench>
+          <acceleration>-0.005804 -0 2e-06 0 -0.011607 0</acceleration>
+          <wrench>-0.002999 -0 1e-06 0 -0 0</wrench>
         </link>
       </model>
       <model name='wood_cube_small'>
@@ -737,25 +737,25 @@
         <link name='link'>
           <pose frame=''>-1.77646 3.21921 0.173987 -3e-06 0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0.008141 0 0 -0 0.046447 0.000161</acceleration>
-          <wrench>0.004206 0 0 0 -0 0</wrench>
+          <acceleration>0.008141 -0 -0 -0 0.046447 0.000161</acceleration>
+          <wrench>0.004206 -0 -0 0 -0 0</wrench>
         </link>
       </model>
       <model name='wood_cube_small_0'>
-        <pose frame=''>-3.07733 -0.999309 -0.001013 -3e-06 -0 0</pose>
+        <pose frame=''>-3.07733 -0.999309 -0.001013 -3e-06 0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-3.07733 -0.999309 0.173987 -3e-06 -0 0</pose>
+          <pose frame=''>-3.07733 -0.999309 0.173987 -3e-06 0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.008141 -0 -0 -0 -0.046447 -0.000161</acceleration>
-          <wrench>-0.004206 -0 -0 0 -0 0</wrench>
+          <acceleration>0.008141 -0 -0 -0 0.046447 0.000161</acceleration>
+          <wrench>0.004206 -0 -0 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>
         <pose frame=''>0 0 10 0 -0 0</pose>
       </light>
       <light name='user_point_light_0'>
-        <pose frame=''>0 0 5 0 -0 0</pose>
+        <pose frame=''>0 0 15 0 -0 0</pose>
       </light>
     </state>
     <model name='wood_cube'>
@@ -1211,7 +1211,7 @@
     </model>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>0.780508 -0.439651 10.4684 0 1.3818 -1.18065</pose>
+        <pose frame=''>-4.58873 -0.363638 20.4962 -0 1.3578 -0.388649</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
