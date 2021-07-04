@@ -27,8 +27,10 @@ Features:
 
 {% file src=".gitbook/assets/universalgridmaplibrarywebsiteversion.pdf" caption="Grid\_maps paper" %}
 
-**Section 1 :**  working with the library step by step through an example of a sinosoidal function   
+**Section 2 :**  working with the library step by step through an example of a sinosoidal function   
                                                          **\( Highly recommended \)**
+
+\*\*\*\*
 
 \*\*\*\*
 
