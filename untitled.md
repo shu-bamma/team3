@@ -27,10 +27,29 @@ Features:
 
 {% file src=".gitbook/assets/universalgridmaplibrarywebsiteversion.pdf" caption="Grid\_maps paper" %}
 
-**Section 2 :**  working with the library step by step through an example of a sinosoidal function   
+#### The paper covers all aspects of the above mentioned GridMpas repositary in sufficient detail for you to follow through and implement with your pointclouds. The most interesting sections of the paper are summarised below
+
+### **Section 2 :**
+
+ ****working with the library step by step through an example of a sinosoidal function   
                                                          **\(  recommended \)**
 
-**Section 3 : sd**
+### **Section 3 :        \( highly recommended \)**
+
+**Use of the package and its utilities** \(all concepts explained\)
+
+* **Adding, accessign and removing layers**
+* **Setting geometry and positions**
+* **Accessing cells**
+* **Moving the Map**
+* **Basic layers**
+* **Iterating over the cells**
+* **Using EIGEN functions**
+* **Creating Submaps**
+* **Converting from and to ROS data types**
+* **Adding data from images**
+
+
 
 \*\*\*\*
 
